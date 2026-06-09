@@ -4,10 +4,9 @@ package ch.epfl.cs107.icoop.area;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.math.Vector;
 
 /**
- * A specific Tuto2 area
+ * A specific ICoop area
  */
 public final class OrbWay extends ICoopArea {
 
@@ -24,11 +23,10 @@ public final class OrbWay extends ICoopArea {
     protected void createArea() {
         registerActor(new Background(this));
         registerActor(new Foreground(this));
-        registerActor(new SimpleGhost(new Vector(20, 10), "ghost.2"));
     }
 
     @Override
-    public String getTitle() {
+    public String getTitle(){
         return "OrbWay";
     }
 

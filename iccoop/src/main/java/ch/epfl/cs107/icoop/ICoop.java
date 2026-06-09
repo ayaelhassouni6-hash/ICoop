@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop;
 
 
+import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.area.OrbWay;
 import ch.epfl.cs107.icoop.area.Spawn;
@@ -17,12 +18,9 @@ public class ICoop extends AreaGame {
     public String getTitle() {
         return "ICoop";
     }
-    private final String[] areas = {"Spawn", "OrbWay"};
-    private GhostPlayer player;
-    private int areaIndex;
 
     /**
-     * Add all the Tuto2 areas
+     * Add all the ICoop areas
      */
     private void createAreas() {
         addArea(new Spawn());
@@ -38,8 +36,7 @@ public class ICoop extends AreaGame {
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             createAreas();
-            areaIndex = 0;
-            initArea(areas[areaIndex]);
+            setCurrentArea("Spawn", true);
             return true;
         }
         return false;
@@ -50,8 +47,6 @@ public class ICoop extends AreaGame {
      */
     @Override
     public void update(float deltaTime) {
-        if (player.isWeak())
-            switchArea();
         super.update(deltaTime);
     }
 
@@ -61,26 +56,17 @@ public class ICoop extends AreaGame {
     }
 
     /**
-     * sets the area named `areaKey` as current area in the game Tuto2
+     * sets the area named `areaKey` as current area in the game ICoop
      * @param areaKey (String) title of an area
      */
     private void initArea(String areaKey) {
         ICoopArea area = (ICoopArea) setCurrentArea(areaKey, true);
         DiscreteCoordinates coords = area.getPlayerSpawnPosition();
-        player = new GhostPlayer(area, Orientation.DOWN, coords, "ghost.1");
+        DiscreteCoordinates coords2 = area.getPlayer2SpawnPosition();
+        /*player = new ICoopPlayer(area, Orientation.DOWN, coords, "ghost.1");
         player.enterArea(area, coords);
         player.centerCamera();
+         */
     }
 
-    /**
-     * switches from one area to the other
-     * the player is healed when moving to a new area
-     */
-    private void switchArea() {
-        player.leaveArea();
-        areaIndex = (areaIndex == 0) ? 1 : 0;
-        ICoopArea currentArea = (ICoopArea) setCurrentArea(areas[areaIndex], false);
-        player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
-        player.strengthen();
-    }
 }

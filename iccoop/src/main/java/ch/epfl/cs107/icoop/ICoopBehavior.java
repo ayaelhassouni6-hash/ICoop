@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop;
 
+import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.AreaBehavior;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
@@ -26,20 +27,25 @@ public final class ICoopBehavior extends AreaBehavior {
 
     public enum ICoopCellType {
         //https://stackoverflow.com/questions/25761438/understanding-bufferedimage-getrgb-output-values
-        NULL(0, false),
-        WALL(-16777216, false),
-        IMPASSABLE(-8750470, false),
-        INTERACT(-256, true),
-        DOOR(-195580, true),
-        WALKABLE(-1, true),
+        NULL(0, false, false),
+        WALL(-16777216, false, false),
+        IMPASSABLE(-8750470, false, true),
+        INTERACT(-256, true, true),
+        DOOR(-195580, true, true),
+        WALKABLE(-1, true, true),
+        ROCK ( -16777204 , true , true ),
+        OBSTACLE ( -16723187 , true , true )
         ;
 
         final int type;
-        final boolean isWalkable;
+        final boolean canWalk;
+        final boolean canFly;
 
-        ICoopCellType(int type, boolean isWalkable) {
+        ICoopCellType(int type, boolean canWalk, boolean canFly) {
             this.type = type;
-            this.isWalkable = isWalkable;
+            this.canWalk = canWalk;
+            this.canFly=canFly;
+
         }
 
         public static ICoopCellType toType(int type) {
@@ -72,6 +78,7 @@ public final class ICoopBehavior extends AreaBehavior {
             this.type = type;
         }
 
+
         @Override
         protected boolean canLeave(Interactable entity) {
             return true;
@@ -79,18 +86,21 @@ public final class ICoopBehavior extends AreaBehavior {
 
         @Override
         protected boolean canEnter(Interactable entity) {
-            return type.isWalkable;
-        }
-
-        @Override
-        public boolean isCellInteractable() {
+            if (!type.canWalk)
+                return false;
+            final boolean entityTakesSpace = entity.takeCellSpace();
+            for (Interactable existingEntity : entities) {
+                final boolean existingTakesSpace = existingEntity.takeCellSpace();
+                if (entityTakesSpace && existingTakesSpace) return false;
+            }
             return true;
         }
 
         @Override
-        public boolean isViewInteractable() {
-            return false;
-        }
+        public boolean isCellInteractable() {return true;}
+
+        @Override
+        public boolean isViewInteractable() {return false;}
 
         @Override
         public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {

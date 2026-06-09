@@ -18,7 +18,6 @@ public final class Spawn extends ICoopArea {
     public DiscreteCoordinates getPlayerSpawnPosition() {
         return new DiscreteCoordinates(13, 6); // Position du personnage rouge
     }
-
     @Override
     public DiscreteCoordinates getPlayer2SpawnPosition() {
         return new DiscreteCoordinates(14, 6); // Position du personnage bleu
