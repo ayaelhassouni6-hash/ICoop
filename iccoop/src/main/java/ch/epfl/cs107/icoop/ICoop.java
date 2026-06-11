@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop;
 
 
+import ch.epfl.cs107.icoop.actor.ElementalEntity;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.area.ICoopArea;
 import ch.epfl.cs107.icoop.area.OrbWay;
@@ -10,10 +11,11 @@ import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.window.Window;
+import static ch.epfl.cs107.icoop.KeyBindings.RED_PLAYER_KEY_BINDINGS;
 
 
 public class ICoop extends AreaGame {
-    // TO BE COMPLETED
+    private ICoopPlayer player;
     @Override
     public String getTitle() {
         return "ICoop";
@@ -36,7 +38,7 @@ public class ICoop extends AreaGame {
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             createAreas();
-            setCurrentArea("Spawn", true);
+            initArea("Spawn");
             return true;
         }
         return false;
@@ -63,10 +65,9 @@ public class ICoop extends AreaGame {
         ICoopArea area = (ICoopArea) setCurrentArea(areaKey, true);
         DiscreteCoordinates coords = area.getPlayerSpawnPosition();
         DiscreteCoordinates coords2 = area.getPlayer2SpawnPosition();
-        /*player = new ICoopPlayer(area, Orientation.DOWN, coords, "ghost.1");
+        player = new ICoopPlayer(area, Orientation.DOWN, ElementalEntity.Element.FIRE, coords, RED_PLAYER_KEY_BINDINGS);
         player.enterArea(area, coords);
         player.centerCamera();
-         */
     }
 
 }

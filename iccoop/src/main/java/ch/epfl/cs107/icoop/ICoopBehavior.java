@@ -34,7 +34,11 @@ public final class ICoopBehavior extends AreaBehavior {
         DOOR(-195580, true, true),
         WALKABLE(-1, true, true),
         ROCK ( -16777204 , true , true ),
-        OBSTACLE ( -16723187 , true , true )
+        OBSTACLE ( -16723187 , true , true ),
+        DARK1(-16645630,   false,   false),
+        DARK2(-16514044,   false,   false),
+        DARK_GRAY(-15790321,   false,   false),
+        LIGHT_WALKABLE(-263173,     true,    true)
         ;
 
         final int type;
