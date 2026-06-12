@@ -8,33 +8,29 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
 
-/**
- * A specific   ICoop area
- */
+import java.util.Arrays;
+import java.util.List;
 public final class Spawn extends ICoopArea {
-
-    /**
-     * @return the player's spawn position in the area
-     */
-
+    Door spawnToOrbWay;
     @Override
     public DiscreteCoordinates getPlayerSpawnPosition() {
-        return new DiscreteCoordinates(13, 6); // Position du personnage rouge
+        return new DiscreteCoordinates(13, 6);
     }
-    @Override
-    public DiscreteCoordinates getPlayer2SpawnPosition() {
-        return new DiscreteCoordinates(14, 6); // Position du personnage bleu
-    }
+
+
     @Override
     protected void createArea() {
         registerActor(new Background(this));
         registerActor(new Foreground(this));
-        registerActor(new Door(this, Orientation.DOWN, Logic.TRUE, "OrbWay", new DiscreteCoordinates(1, 12), new DiscreteCoordinates(19, 15), new DiscreteCoordinates(19, 16)));
+        List<DiscreteCoordinates> arrivalInOrbWay = Arrays.asList(
+                new DiscreteCoordinates(1, 12),
+                new DiscreteCoordinates(1, 5)
+        );
+        DiscreteCoordinates doorMainCell = new DiscreteCoordinates(19, 15);
+        spawnToOrbWay = new Door("OrbWay", Logic.TRUE, arrivalInOrbWay, this, doorMainCell, Orientation.RIGHT, new DiscreteCoordinates(19, 16));
+        registerActor(spawnToOrbWay);
     }
-
-    @Override
     public String getTitle() {
         return "Spawn";
     }
-
 }

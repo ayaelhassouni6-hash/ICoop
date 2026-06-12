@@ -8,7 +8,6 @@ import ch.epfl.cs107.play.window.Window;
 
 public final class ICoopBehavior extends AreaBehavior {
     /**
-     * Default Tuto2Behavior Constructor
      *
      * @param window (Window), not null
      * @param name   (String): Name of the Behavior, not null

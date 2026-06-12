@@ -18,7 +18,10 @@ public abstract class ICoopArea extends Area {
      * @return the player's spawn position in the area
      */
     public abstract DiscreteCoordinates getPlayerSpawnPosition();
-    public abstract DiscreteCoordinates getPlayer2SpawnPosition();
+    public DiscreteCoordinates getPlayer2SpawnPosition() {
+        DiscreteCoordinates p1Spawn = getPlayerSpawnPosition();
+        return new DiscreteCoordinates(p1Spawn.x + 1, p1Spawn.y);
+    }
     /**
      * Callback to initialise the instance of the area
      * @param window (Window): display context. Not null
@@ -33,6 +36,9 @@ public abstract class ICoopArea extends Area {
             return true;
         }
         return false;
+    }
+    public void setCameraScaleFactor(float scaleFactor) {
+        this.cameraScaleFactor = scaleFactor;
     }
 
     /**

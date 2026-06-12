@@ -9,31 +9,44 @@ import ch.epfl.cs107.play.math.Orientation;
 import ch.epfl.cs107.play.signal.logic.Logic;
 import ch.epfl.cs107.play.window.Canvas;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Door extends AreaEntity {
+    private final String destinationAreaName;
     private final Logic signal;
-    private final String destinationArea;
-    private final DiscreteCoordinates destinationPosition;
-    private final List<DiscreteCoordinates> cells;
+    private final List<DiscreteCoordinates> arrivalCoordinates;
+    private final List<DiscreteCoordinates> otherCells;
 
-    public Door(Area owner, Orientation orientation, Logic signal, String destinationArea, DiscreteCoordinates destinationPosition, DiscreteCoordinates... cells){
-        super(owner, orientation, cells[0]);
+
+    public Door(String destinationAreaName, Logic signal, List<DiscreteCoordinates> arrivalCoordinates,
+                Area owner, DiscreteCoordinates mainCellPosition, Orientation orientation,DiscreteCoordinates CellCoordinates) {
+
+        super(owner, orientation, mainCellPosition);
+        this.destinationAreaName = destinationAreaName;
         this.signal = signal;
-        this.destinationArea = destinationArea;
-        this.destinationPosition = destinationPosition;
-        this.cells = Arrays.asList(cells);
+        this.arrivalCoordinates = arrivalCoordinates;
+        this.otherCells = new ArrayList<>(List.of(CellCoordinates));
+
+    }
+    public Door(String destinationAreaName, Logic signal, List<DiscreteCoordinates> arrivalCoordinates,
+                Area owner, DiscreteCoordinates mainCellPosition, Orientation orientation,
+                DiscreteCoordinates ...otherCells) {
+        super(owner, orientation, mainCellPosition);
+        this.destinationAreaName = destinationAreaName;
+        this.signal = signal;
+        this.arrivalCoordinates = arrivalCoordinates;
+        this.otherCells = new ArrayList<>(Arrays.asList(otherCells));
+    }
+    public String getDestinationAreaName() {
+        return destinationAreaName;
     }
     public Logic getSignal(){
         return signal;
     }
-    public String getDestinationArea() {
-        return destinationArea;
-    }
-
-    public DiscreteCoordinates getDestinationPosition() {
-        return destinationPosition;
+    public List<DiscreteCoordinates> getArrivalCoordinates() {
+        return arrivalCoordinates;
     }
     @Override
     public void draw(Canvas canvas) {
@@ -56,7 +69,10 @@ public class Door extends AreaEntity {
 
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
-        return cells;
+        List<DiscreteCoordinates> allCells = new ArrayList<>();
+        allCells.add(getCurrentMainCellCoordinates());
+        allCells.addAll(otherCells);
+        return allCells;
     }
 
     @Override
