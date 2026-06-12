@@ -2,6 +2,8 @@ package ch.epfl.cs107.icoop.area;
 
 
 import ch.epfl.cs107.icoop.actor.Door;
+import ch.epfl.cs107.icoop.actor.Explosif;
+import ch.epfl.cs107.icoop.actor.Rock;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -27,7 +29,14 @@ public final class Spawn extends ICoopArea {
                 new DiscreteCoordinates(1, 5)
         );
         DiscreteCoordinates doorMainCell = new DiscreteCoordinates(19, 15);
-        spawnToOrbWay = new Door("OrbWay", Logic.TRUE, arrivalInOrbWay, this, doorMainCell, Orientation.RIGHT, new DiscreteCoordinates(19, 16));
+        spawnToOrbWay = new Door("OrbWay", Logic.TRUE, arrivalInOrbWay,
+                this, doorMainCell, Orientation.RIGHT,
+                new DiscreteCoordinates(19, 16));
+        Explosif explosive = new Explosif(this, new DiscreteCoordinates(11, 10), 4);
+        Rock rock = new Rock(this, new DiscreteCoordinates(10, 10));
+
+        registerActor(explosive);
+        registerActor(rock);
         registerActor(spawnToOrbWay);
     }
     public String getTitle() {
