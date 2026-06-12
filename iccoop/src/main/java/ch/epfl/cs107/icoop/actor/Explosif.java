@@ -74,7 +74,7 @@ public class Explosif extends AreaEntity implements Interactable, Interactor {
 
     @Override
     public boolean takeCellSpace() {
-        return false;
+        return true;
     }
 
     @Override
@@ -110,6 +110,9 @@ public class Explosif extends AreaEntity implements Interactable, Interactor {
     public void interactWith(Interactable other, boolean isCellInteraction) {
         if (other instanceof Rock) {
             ((Rock) other).setDestroyed(true);
+        }
+        if (other instanceof ICoopPlayer) {
+            ((ICoopPlayer) other).takeDamage(DamageType.PHYSICAL, 2);
         }
     }
 

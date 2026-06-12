@@ -48,10 +48,10 @@ public class ICoop extends AreaGame {
 
     @Override
     public void update(float deltaTime) {
-        /*if (player.isWeak() || player2.isWeak())
-             switchArea();
-             resetArea();
-            return;*/
+        if (player.isWeak() || player2.isWeak()){
+            resetArea();
+        return;
+        }
         Keyboard keyboard = getWindow().getKeyboard();
         if (keyboard.get(KeyBindings.RESET_GAME).isPressed()) {
             resetGame();
@@ -78,12 +78,7 @@ public class ICoop extends AreaGame {
         begin(getWindow(), getFileSystem());
     }
     private void resetArea() {
-        player.leaveArea();
-        player2.leaveArea();
-
         String currentAreaTitle = getCurrentArea().getTitle();
-        getCurrentArea().purgeRegistration();
-
         if (currentAreaTitle.equals("Spawn")) {
             addArea(new Spawn());
         } else if (currentAreaTitle.equals("OrbWay")) {
@@ -91,13 +86,12 @@ public class ICoop extends AreaGame {
         }
 
         ICoopArea currentArea = (ICoopArea) setCurrentArea(currentAreaTitle, true);
-
-        player.strengthen();
-        player2.strengthen();
-
-        player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
-        player2.enterArea(currentArea, currentArea.getPlayer2SpawnPosition());
-
+        DiscreteCoordinates coords = currentArea.getPlayerSpawnPosition();
+        DiscreteCoordinates coords2 = currentArea.getPlayer2SpawnPosition();
+        player = new ICoopPlayer(currentArea, Orientation.DOWN, ElementalEntity.Element.FIRE, coords, "icoop/player", KeyBindings.RED_PLAYER_KEY_BINDINGS);
+        player2 = new ICoopPlayer(currentArea, Orientation.DOWN, ElementalEntity.Element.WATER, coords2, "icoop/player2", KeyBindings.BLUE_PLAYER_KEY_BINDINGS);
+        player.enterArea(currentArea, coords);
+        player2.enterArea(currentArea, coords2);
         centerOfMass = new CenterOfMass(player, player2);
         currentArea.registerActor(centerOfMass);
         currentArea.setViewCandidate(centerOfMass);

@@ -27,12 +27,15 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
     private final static int MOVE_DURATION = 5;
     private final static int ANIMATION_DURATION = 4;
     private final Element element;
-    private final TextGraphics message;
     private final OrientedAnimation animation;
-    private float hp;
     private final KeyBindings.PlayerKeyBindings keys;
     private String pendingDestinationArea;
     private List<DiscreteCoordinates> pendingArrivalCoordinates = null;
+    private final static int MAX_LIFE = 5;
+    private final Health healthBar;
+    private final static int IMMUNITY_DURATION = 24;
+    private int immunityCounter = 0;
+    private DamageType invulnerability = DamageType.NONE;
 
     /**
      * @param owner       (Area) area to which the player belong
@@ -44,14 +47,12 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
         super(owner, orientation, coordinates);
         resetMotion();
         this.keys = keys;
-        this.hp = 10;
-        message = new TextGraphics(Integer.toString((int) hp), 0.4f, Color.BLUE);
-        message.setParent(this);
-        message.setAnchor(new Vector(-0.3f, 0.1f));
+        this.element = element;
+
         final Vector anchor = new Vector(0, 0);
         final Orientation[] orders = {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT};
         this.animation = new OrientedAnimation(spriteName, ANIMATION_DURATION, this, anchor, orders, 4, 1, 2, 16, 32, true);
-        this.element = element;
+        this.healthBar = new Health(this, Transform.I.translated(0, 1.75f), MAX_LIFE, true);
     }
 
     /**
@@ -60,12 +61,6 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
 
     @Override
     public void update(float deltaTime) {
-        if (hp > 0) {
-            hp -= deltaTime;
-            message.setText(Integer.toString((int) hp));
-        }
-        if (hp < 0) hp = 0.f;
-
         Keyboard keyboard = getOwnerArea().getKeyboard();
         new Health (this , Transform.I. translated (0 , 1.75f), 1 ,
                 true );
@@ -78,13 +73,18 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
         } else {
             animation.reset();
         }
+        if (immunityCounter > 0) {
+            immunityCounter--;
+        }
         super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
-        animation.draw(canvas);
-        //message.draw(canvas);
+        if (immunityCounter == 0 || immunityCounter % 2 == 0) {
+            animation.draw(canvas);
+        }
+        healthBar.draw(canvas);
     }
 
     @Override
@@ -129,7 +129,7 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
     }
 
     public boolean isWeak() {
-        return (hp <= 0.f);
+        return !healthBar.isOn();
     }
 
     public void centerCamera() {
@@ -137,7 +137,8 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
     }
 
     public void strengthen() {
-        hp = 10;
+        healthBar.increase(MAX_LIFE);
+        immunityCounter = 0;
     }
 
     @Override
@@ -198,5 +199,12 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
             }
         }
 
+    }
+    public void takeDamage(DamageType type, int amount) {
+        if (this.invulnerability == type || this.immunityCounter > 0) {
+            return;
+        }
+        healthBar.increase(-amount);
+        this.immunityCounter = IMMUNITY_DURATION;
     }
 }
