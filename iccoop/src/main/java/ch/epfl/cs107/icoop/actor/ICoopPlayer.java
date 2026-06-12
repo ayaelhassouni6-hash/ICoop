@@ -4,6 +4,9 @@ package ch.epfl.cs107.icoop.actor;
  * A ICoopPlayer is a player for the ICoop game.
  */
 import ch.epfl.cs107.icoop.KeyBindings;
+import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
+import ch.epfl.cs107.play.areagame.actor.Interactable;
+import ch.epfl.cs107.play.areagame.actor.Interactor;
 import ch.epfl.cs107.play.areagame.actor.MovableAreaEntity;
 import ch.epfl.cs107.play.areagame.area.Area;
 import ch.epfl.cs107.play.areagame.handler.AreaInteractionVisitor;
@@ -21,15 +24,14 @@ import java.util.List;
 
 import static ch.epfl.cs107.play.math.Orientation.*;
 
-/**
- * A GhostPlayer is the main character in a  ICoop game.
- * It can lose life, be healed and move from an area to another
- */
-public final class ICoopPlayer extends MovableAreaEntity implements ElementalEntity{
+
+public final class ICoopPlayer extends MovableAreaEntity implements ElementalEntity, Interactor {
     private final Element element;
     private final static int ANIMATION_DURATION = 4;
     private final OrientedAnimation animation;
     private final KeyBindings.PlayerKeyBindings keys;
+    private final ICoopPlayerInteractionHandler interactionHandler;
+    private Door pendingDoor;
 
     /**
      * @param owner (Area) area to which the player belong
@@ -41,15 +43,21 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
         super(owner, orientation, coordinates);
         this.keys = keys;
         this.element = element;
+        this.interactionHandler = new ICoopPlayerInteractionHandler();
         String spriteName = (element == Element.FIRE) ? "icoop/player" : "icoop/player2";
         final Orientation[] orders = {DOWN, RIGHT, UP, LEFT};
         this.animation = new OrientedAnimation(spriteName, ANIMATION_DURATION, this, Vector.ZERO, orders, 4, 1, 2, 16, 32, true);
         resetMotion();
     }
 
-    /**
-     * @param deltaTime elapsed time since last update, in seconds, non-negative
-     */
+    public boolean hasPendingDoor() {
+        return pendingDoor != null;
+    }
+    public Door consumePendingDoor() {
+        Door d = pendingDoor;
+        pendingDoor = null;
+        return d;
+    }
     @Override
     public void update(float deltaTime) {
         Keyboard keyboard = getOwnerArea().getKeyboard();
@@ -99,9 +107,35 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
-
+    @Override
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return Collections.singletonList(
+                getCurrentMainCellCoordinates().jump(getOrientation().toVector()));
+    }
+    @Override
+    public boolean wantsCellInteraction() {
+        return true;
+    }
+    @Override
+    public boolean wantsViewInteraction() {
+        return getOwnerArea().getKeyboard().get(keys.useItem()).isDown();
+    }
+    @Override
+    public void interactWith(Interactable other, boolean isCellInteraction) {
+        other.acceptInteraction(interactionHandler, isCellInteraction);
+    }
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
+    }
+
+    private class ICoopPlayerInteractionHandler implements ICoopInteractionVisitor {
+        @Override
+        public void interactWith(Door door, boolean isCellInteraction) {
+            if (isCellInteraction && door.getSignal().isOn()) {
+                pendingDoor = door;
+            }
+        }
     }
 
     /**
@@ -131,28 +165,16 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
      * @param position (DiscreteCoordinates): initial position in the entered area, not null
      */
     public void enterArea(Area area, DiscreteCoordinates position) {
-        area.registerActor(this);
-        area.setViewCandidate(this);
         setOwnerArea(area);
         setCurrentPosition(position.toVector());
         resetMotion();
+        area.registerActor(this);
+        area.setViewCandidate(this);
     }
 
-    /**
-     * @return true if the hp level is <= 0
-     */
-
-
-    /**
-     * Center the camera on the player
-     */
     public void centerCamera() {
         getOwnerArea().setViewCandidate(this);
     }
-
-    /**
-     * heals the player
-     */
 
 
 

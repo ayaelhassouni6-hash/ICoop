@@ -38,7 +38,8 @@ public final class ICoopBehavior extends AreaBehavior {
         DARK1(-16645630,   false,   false),
         DARK2(-16514044,   false,   false),
         DARK_GRAY(-15790321,   false,   false),
-        LIGHT_WALKABLE(-263173,     true,    true)
+        LIGHT_WALKABLE(-263173,     true,    true),
+        DOOR2(-14112955,   false,   true)
         ;
 
         final int type;
@@ -108,6 +109,7 @@ public final class ICoopBehavior extends AreaBehavior {
 
         @Override
         public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+            ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
         }
 
     }

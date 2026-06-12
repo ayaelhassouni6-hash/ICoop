@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop;
 
 
+import ch.epfl.cs107.icoop.actor.Door;
 import ch.epfl.cs107.icoop.actor.ElementalEntity;
 import ch.epfl.cs107.icoop.actor.ICoopPlayer;
 import ch.epfl.cs107.icoop.area.ICoopArea;
@@ -28,7 +29,14 @@ public class ICoop extends AreaGame {
         addArea(new Spawn());
         addArea(new OrbWay());
     }
-
+    private void processPendingTransitions(){
+        if( player != null && player.hasPendingDoor()) {
+            Door door = player.consumePendingDoor();
+            player.leaveArea();
+            ICoopArea area = (ICoopArea)setCurrentArea(door.getDestinationArea(), false);
+            player.enterArea(area, door.getDestinationPosition());
+        }
+    }
     /**
      * @param window (Window): display context. Not null
      * @param fileSystem (FileSystem): given file system. Not null
@@ -49,6 +57,7 @@ public class ICoop extends AreaGame {
      */
     @Override
     public void update(float deltaTime) {
+        processPendingTransitions();
         super.update(deltaTime);
     }
 
