@@ -2,6 +2,7 @@ package ch.epfl.cs107.icoop;
 
 import ch.epfl.cs107.icoop.actor.CenterOfMass;
 import ch.epfl.cs107.icoop.actor.ElementalEntity;
+import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.play.areagame.AreaGame;
 import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.io.FileSystem;
@@ -19,7 +20,7 @@ import java.util.List;
 import static ch.epfl.cs107.icoop.area.ICoopArea.DEFAULT_SCALE_FACTOR;
 import static java.lang.Math.max;
 
-public class ICoop extends AreaGame {
+public class ICoop extends AreaGame implements DialogHandler {
     private final String[] areas = {"Spawn", "OrbWay"};
     private ICoopPlayer player;
     private ICoopPlayer player2;
@@ -28,6 +29,10 @@ public class ICoop extends AreaGame {
     private Dialog activeDialog;
     public void setActiveDialog(Dialog dialog) {
         this.activeDialog = dialog;
+    }
+    @Override
+    public void publish(Dialog dialog) {
+        setActiveDialog(dialog);
     }
     @Override
     public String getTitle() {
@@ -39,7 +44,7 @@ public class ICoop extends AreaGame {
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
-            addArea(new Spawn());
+            addArea(new Spawn(this));
             addArea(new OrbWay());
             initArea(areas[areaIndex]);
             centerOfMass = new CenterOfMass(player,player2);
@@ -58,15 +63,12 @@ public class ICoop extends AreaGame {
             return;
         }
         Keyboard keyboard = getWindow().getKeyboard();
-        if (keyboard.get(Keyboard.P).isPressed() && activeDialog == null) {
-            setActiveDialog(new Dialog("orb_water_msg"));
-        }
         if (activeDialog != null) {
-            activeDialog.update(deltaTime);
             if (keyboard.get(KeyBindings.NEXT_DIALOG).isPressed()) {
-                if (activeDialog.isCompleted()) {
-                    activeDialog = null;
-                }
+                activeDialog.update(deltaTime);
+            }
+            if (activeDialog.isCompleted()) {
+                activeDialog = null;
             }
             return;
         }
@@ -97,7 +99,9 @@ public class ICoop extends AreaGame {
     private void resetArea() {
         String currentAreaTitle = getCurrentArea().getTitle();
         if (currentAreaTitle.equals("Spawn")) {
-            addArea(new Spawn());
+            Spawn newSpawn = new Spawn(this);
+            newSpawn.setWelcomeShown();
+            addArea(newSpawn);
         } else if (currentAreaTitle.equals("OrbWay")) {
             addArea(new OrbWay());
         }
