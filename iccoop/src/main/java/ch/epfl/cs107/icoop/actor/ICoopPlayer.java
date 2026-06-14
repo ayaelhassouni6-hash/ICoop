@@ -204,7 +204,7 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
         if (this.invulnerability == type || this.immunityCounter > 0) {
             return;
         }
-        healthBar.increase(-amount);
+        healthBar.decrease(amount);
         this.immunityCounter = IMMUNITY_DURATION;
     }
 }

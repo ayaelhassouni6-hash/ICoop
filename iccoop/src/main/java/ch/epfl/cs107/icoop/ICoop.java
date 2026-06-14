@@ -50,7 +50,7 @@ public class ICoop extends AreaGame {
     public void update(float deltaTime) {
         if (player.isWeak() || player2.isWeak()){
             resetArea();
-        return;
+            return;
         }
         Keyboard keyboard = getWindow().getKeyboard();
         if (keyboard.get(KeyBindings.RESET_GAME).isPressed()) {
