@@ -3,6 +3,7 @@ package ch.epfl.cs107.icoop;
 import ch.epfl.cs107.icoop.actor.CenterOfMass;
 import ch.epfl.cs107.icoop.actor.ElementalEntity;
 import ch.epfl.cs107.play.areagame.AreaGame;
+import ch.epfl.cs107.play.engine.actor.Dialog;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Orientation;
@@ -24,6 +25,10 @@ public class ICoop extends AreaGame {
     private ICoopPlayer player2;
     private int areaIndex;
     private CenterOfMass centerOfMass;
+    private Dialog activeDialog;
+    public void setActiveDialog(Dialog dialog) {
+        this.activeDialog = dialog;
+    }
     @Override
     public String getTitle() {
         return "ICoop";
@@ -53,6 +58,18 @@ public class ICoop extends AreaGame {
             return;
         }
         Keyboard keyboard = getWindow().getKeyboard();
+        if (keyboard.get(Keyboard.P).isPressed() && activeDialog == null) {
+            setActiveDialog(new Dialog("orb_water_msg"));
+        }
+        if (activeDialog != null) {
+            activeDialog.update(deltaTime);
+            if (keyboard.get(KeyBindings.NEXT_DIALOG).isPressed()) {
+                if (activeDialog.isCompleted()) {
+                    activeDialog = null;
+                }
+            }
+            return;
+        }
         if (keyboard.get(KeyBindings.RESET_GAME).isPressed()) {
             resetGame();
             return;
@@ -131,5 +148,13 @@ public class ICoop extends AreaGame {
         DiscreteCoordinates coords2 = currentArea.getPlayer2SpawnPosition();
         player2.enterArea(currentArea, coords2);
         player2.strengthen();
+    }
+    @Override
+    public void draw() {
+        super.draw();
+
+        if (activeDialog != null) {
+            activeDialog.draw(getWindow());
+        }
     }
 }
