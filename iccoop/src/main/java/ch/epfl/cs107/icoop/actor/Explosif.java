@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop.actor;
 
+import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.AreaEntity;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Explosif extends AreaEntity implements Interactable, Interactor {
+public class Explosif extends ICoopCollectable implements Interactor {
 
     private Animation animation;
     private int retardateur;
@@ -74,7 +75,7 @@ public class Explosif extends AreaEntity implements Interactable, Interactor {
 
     @Override
     public boolean takeCellSpace() {
-        return true;
+        return isActivated;
     }
 
     @Override
@@ -94,6 +95,7 @@ public class Explosif extends AreaEntity implements Interactable, Interactor {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v, boolean isCellInteraction) {
+        ((ICoopInteractionVisitor) v).interactWith(this, isCellInteraction);
     }
 
     @Override

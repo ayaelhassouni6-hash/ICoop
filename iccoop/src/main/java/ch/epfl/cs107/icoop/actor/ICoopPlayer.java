@@ -178,9 +178,6 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
 
     @Override
     public void interactWith(Interactable other, boolean isCellInteraction) {
-        if (!isCellInteraction && other instanceof Explosif) {
-            ((Explosif) other).activate();
-        }
         other.acceptInteraction(new ICoopPlayerInteractionVisitor(), isCellInteraction);
     }
 
@@ -196,6 +193,16 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
             if (isCellInteraction && door.getSignal().isOn()) {
                 pendingDestinationArea = door.getDestinationAreaName();
                 pendingArrivalCoordinates = door.getArrivalCoordinates();
+            }
+        }
+        @Override
+        public void interactWith(Explosif explosif, boolean isCellInteraction) {
+            if (isCellInteraction) {
+                if (!explosif.isActivated() && !explosif.hasExploded()) {
+                    explosif.collect();
+                }
+            } else {
+                explosif.activate();
             }
         }
 
