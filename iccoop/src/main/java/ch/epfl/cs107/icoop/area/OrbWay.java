@@ -2,6 +2,8 @@ package ch.epfl.cs107.icoop.area;
 
 
 import ch.epfl.cs107.icoop.actor.Door;
+import ch.epfl.cs107.icoop.actor.Orb;
+import ch.epfl.cs107.icoop.actor.OrbType;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -38,7 +40,8 @@ public final class OrbWay extends ICoopArea {
         };
         Door doorToSpawn2 = new Door("Spawn", Logic.TRUE, arrivalInSpawn,
                 this, mainCell2, Orientation.RIGHT, otherCells2);
-
+        registerActor(new Orb(this, new DiscreteCoordinates(17, 12), OrbType.FIRE));
+        registerActor(new Orb(this, new DiscreteCoordinates(17, 6), OrbType.WATER));
         registerActor(doorToSpawn1);
         registerActor(doorToSpawn2);
     }
