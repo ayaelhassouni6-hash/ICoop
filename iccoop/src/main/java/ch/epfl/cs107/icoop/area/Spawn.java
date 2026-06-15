@@ -1,9 +1,7 @@
 package ch.epfl.cs107.icoop.area;
 
 
-import ch.epfl.cs107.icoop.actor.Door;
-import ch.epfl.cs107.icoop.actor.Explosif;
-import ch.epfl.cs107.icoop.actor.Rock;
+import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Dialog;
@@ -51,6 +49,7 @@ public final class Spawn extends ICoopArea {
         Explosif bomb1 = new Explosif(this, new DiscreteCoordinates(11, 10), 4);
         Explosif bomb2 = new Explosif(this, new DiscreteCoordinates(15, 8), 3);
         Explosif bomb3 = new Explosif(this, new DiscreteCoordinates(18, 4), 2);
+        registerActor(new Orb(this, new DiscreteCoordinates(10, 8), OrbType.FIRE));
         Rock rock = new Rock(this, new DiscreteCoordinates(10, 10));
         registerActor(bomb1);
         registerActor(bomb2);

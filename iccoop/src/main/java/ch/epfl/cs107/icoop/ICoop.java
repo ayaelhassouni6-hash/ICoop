@@ -109,8 +109,8 @@ public class ICoop extends AreaGame implements DialogHandler {
         ICoopArea currentArea = (ICoopArea) setCurrentArea(currentAreaTitle, true);
         DiscreteCoordinates coords = currentArea.getPlayerSpawnPosition();
         DiscreteCoordinates coords2 = currentArea.getPlayer2SpawnPosition();
-        player = new ICoopPlayer(currentArea, Orientation.DOWN, ElementalEntity.Element.FIRE, coords, "icoop/player", KeyBindings.RED_PLAYER_KEY_BINDINGS);
-        player2 = new ICoopPlayer(currentArea, Orientation.DOWN, ElementalEntity.Element.WATER, coords2, "icoop/player2", KeyBindings.BLUE_PLAYER_KEY_BINDINGS);
+        player = new ICoopPlayer(currentArea, Orientation.DOWN, ElementalEntity.Element.FIRE, coords, "icoop/player", KeyBindings.RED_PLAYER_KEY_BINDINGS, this);
+        player2 = new ICoopPlayer(currentArea, Orientation.DOWN, ElementalEntity.Element.WATER, coords2, "icoop/player2", KeyBindings.BLUE_PLAYER_KEY_BINDINGS, this);
         player.enterArea(currentArea, coords);
         player2.enterArea(currentArea, coords2);
         centerOfMass = new CenterOfMass(player, player2);
@@ -136,8 +136,8 @@ public class ICoop extends AreaGame implements DialogHandler {
         ICoopArea area = (ICoopArea) setCurrentArea(areaKey, true);
         DiscreteCoordinates coords = area.getPlayerSpawnPosition();
         DiscreteCoordinates coords2 = area.getPlayer2SpawnPosition();
-        player = new ICoopPlayer(area, Orientation.DOWN, ElementalEntity.Element.FIRE, coords, "icoop/player",KeyBindings.RED_PLAYER_KEY_BINDINGS);
-        player2 = new ICoopPlayer(area, Orientation.DOWN, ElementalEntity.Element.WATER, coords2, "icoop/player2",KeyBindings.BLUE_PLAYER_KEY_BINDINGS);
+        player = new ICoopPlayer(area, Orientation.DOWN, ElementalEntity.Element.FIRE, coords, "icoop/player", KeyBindings.RED_PLAYER_KEY_BINDINGS, this);
+        player2 = new ICoopPlayer(area, Orientation.DOWN, ElementalEntity.Element.WATER, coords2, "icoop/player2", KeyBindings.BLUE_PLAYER_KEY_BINDINGS, this);
         player.enterArea(area, coords);
         player2.enterArea(area, coords2);
     }

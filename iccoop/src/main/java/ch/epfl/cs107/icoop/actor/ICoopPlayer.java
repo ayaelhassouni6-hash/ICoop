@@ -1,6 +1,7 @@
 package ch.epfl.cs107.icoop.actor;
 
 
+import ch.epfl.cs107.icoop.handler.DialogHandler;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.actor.Interactor;
@@ -17,6 +18,7 @@ import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.icoop.KeyBindings;
+import ch.epfl.cs107.play.engine.actor.Dialog;
 
 import java.awt.*;
 import java.util.Collections;
@@ -36,6 +38,7 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
     private final static int IMMUNITY_DURATION = 24;
     private int immunityCounter = 0;
     private DamageType invulnerability = DamageType.NONE;
+    private final DialogHandler dialogHandler;
 
     /**
      * @param owner       (Area) area to which the player belong
@@ -43,11 +46,12 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
      * @param coordinates (DiscreteCoordinates) the initial position in the grid
      * @param spriteName  (String) name of the sprite used as graphical representation
      */
-    public ICoopPlayer(Area owner, Orientation orientation, Element element, DiscreteCoordinates coordinates, String spriteName, KeyBindings.PlayerKeyBindings keys) {
+    public ICoopPlayer(Area owner, Orientation orientation, Element element, DiscreteCoordinates coordinates, String spriteName, KeyBindings.PlayerKeyBindings keys, DialogHandler dialogHandler) {
         super(owner, orientation, coordinates);
         resetMotion();
         this.keys = keys;
         this.element = element;
+        this.dialogHandler = dialogHandler;
 
         final Vector anchor = new Vector(0, 0);
         final Orientation[] orders = {Orientation.DOWN, Orientation.RIGHT, Orientation.UP, Orientation.LEFT};
@@ -186,6 +190,9 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
         ((ICoopInteractionVisitor) v).interactWith(this,
                 isCellInteraction);
     }
+    public void setInvulnerability(DamageType type) {
+        this.invulnerability = type;
+    }
 
     private class ICoopPlayerInteractionVisitor implements ICoopInteractionVisitor {
         @Override
@@ -212,7 +219,15 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
                 item.collect();
             }
         }
-
+        @Override
+        public void interactWith(Orb orb, boolean isCellInteraction) {
+            if (isCellInteraction && orb.element() == ICoopPlayer.this.element()) {
+                DamageType protection = (orb.element() == Element.FIRE) ? DamageType.FIRE : DamageType.WATER;
+                ICoopPlayer.this.setInvulnerability(protection);
+                dialogHandler.publish(new Dialog(orb.getType().dialogName));
+                orb.collect();
+            }
+        }
     }
     public void takeDamage(DamageType type, int amount) {
         if (this.invulnerability == type || this.immunityCounter > 0) {
