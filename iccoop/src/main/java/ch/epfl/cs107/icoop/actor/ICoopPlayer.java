@@ -205,6 +205,13 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
                 explosif.activate();
             }
         }
+        @Override
+        public void interactWith(ElementalItem item, boolean isCellInteraction) {
+            // On vérifie que c'est un contact ET que les éléments correspondent
+            if (isCellInteraction && item.element() == ICoopPlayer.this.element()) {
+                item.collect();
+            }
+        }
 
     }
     public void takeDamage(DamageType type, int amount) {
