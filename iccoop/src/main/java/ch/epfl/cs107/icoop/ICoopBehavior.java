@@ -1,5 +1,6 @@
 package ch.epfl.cs107.icoop;
 
+import ch.epfl.cs107.icoop.actor.ElementalEntity;
 import ch.epfl.cs107.icoop.handler.ICoopInteractionVisitor;
 import ch.epfl.cs107.play.areagame.actor.Interactable;
 import ch.epfl.cs107.play.areagame.area.AreaBehavior;
@@ -87,15 +88,23 @@ public final class ICoopBehavior extends AreaBehavior {
         protected boolean canLeave(Interactable entity) {
             return true;
         }
-
         @Override
-        protected boolean canEnter(Interactable entity) {
-            if (!type.canWalk)
+        public boolean canEnter(Interactable entity) {
+            if (!type.canWalk) {
                 return false;
-            final boolean entityTakesSpace = entity.takeCellSpace();
-            for (Interactable existingEntity : entities) {
-                final boolean existingTakesSpace = existingEntity.takeCellSpace();
-                if (entityTakesSpace && existingTakesSpace) return false;
+            }
+            for (Interactable other : entities) {
+                if (entity instanceof ElementalEntity && other instanceof ElementalEntity) {
+                    ElementalEntity enteringEntity = (ElementalEntity) entity;
+                    ElementalEntity presentEntity = (ElementalEntity) other;
+
+                    if (enteringEntity.element() != presentEntity.element()) {
+                        return false;
+                    }
+                }
+                if (other.takeCellSpace()) {
+                    return false;
+                }
             }
             return true;
         }

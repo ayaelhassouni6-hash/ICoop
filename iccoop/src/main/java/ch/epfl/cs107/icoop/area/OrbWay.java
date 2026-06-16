@@ -1,9 +1,7 @@
 package ch.epfl.cs107.icoop.area;
 
 
-import ch.epfl.cs107.icoop.actor.Door;
-import ch.epfl.cs107.icoop.actor.Orb;
-import ch.epfl.cs107.icoop.actor.OrbType;
+import ch.epfl.cs107.icoop.actor.*;
 import ch.epfl.cs107.play.engine.actor.Background;
 import ch.epfl.cs107.play.engine.actor.Foreground;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -42,6 +40,14 @@ public final class OrbWay extends ICoopArea {
                 this, mainCell2, Orientation.RIGHT, otherCells2);
         registerActor(new Orb(this, new DiscreteCoordinates(17, 12), OrbType.FIRE));
         registerActor(new Orb(this, new DiscreteCoordinates(17, 6), OrbType.WATER));
+        for (int i = 0; i <= 4; i++) {
+            registerActor(new FireWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 10 + i), Logic.TRUE));
+        }
+        for (int i = 0; i <= 4; i++) {
+            registerActor(new WaterWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 3 + i), Logic.TRUE));
+        }
+        registerActor(new WaterWall(this, Orientation.UP, new DiscreteCoordinates(7, 12), Logic.TRUE));
+        registerActor(new FireWall(this, Orientation.UP, new DiscreteCoordinates(7, 6), Logic.TRUE));
         registerActor(doorToSpawn1);
         registerActor(doorToSpawn2);
     }
