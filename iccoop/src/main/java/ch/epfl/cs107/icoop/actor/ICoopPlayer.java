@@ -228,6 +228,20 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
                 orb.collect();
             }
         }
+        @Override
+        public void interactWith(Heart heart, boolean isCellInteraction) {
+            if (isCellInteraction) {
+                ICoopPlayer.this.heal(1);
+                heart.collect();
+            }
+        }
+
+        @Override
+        public void interactWith(PressurePlate plate, boolean isCellInteraction) {
+            if (isCellInteraction) {
+                plate.press();
+            }
+        }
     }
     public void takeDamage(DamageType type, int amount) {
         if (this.invulnerability == type || this.immunityCounter > 0) {
@@ -235,5 +249,8 @@ public final class ICoopPlayer extends MovableAreaEntity implements ElementalEnt
         }
         healthBar.decrease(amount);
         this.immunityCounter = IMMUNITY_DURATION;
+    }
+    public void heal(int amount) {
+        healthBar.increase(amount);
     }
 }

@@ -38,18 +38,54 @@ public final class OrbWay extends ICoopArea {
         };
         Door doorToSpawn2 = new Door("Spawn", Logic.TRUE, arrivalInSpawn,
                 this, mainCell2, Orientation.RIGHT, otherCells2);
-        registerActor(new Orb(this, new DiscreteCoordinates(17, 12), OrbType.FIRE));
-        registerActor(new Orb(this, new DiscreteCoordinates(17, 6), OrbType.WATER));
-        for (int i = 0; i <= 4; i++) {
-            registerActor(new FireWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 10 + i), Logic.TRUE));
-        }
-        for (int i = 0; i <= 4; i++) {
-            registerActor(new WaterWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 3 + i), Logic.TRUE));
-        }
-        registerActor(new WaterWall(this, Orientation.UP, new DiscreteCoordinates(7, 12), Logic.TRUE));
-        registerActor(new FireWall(this, Orientation.UP, new DiscreteCoordinates(7, 6), Logic.TRUE));
+
         registerActor(doorToSpawn1);
         registerActor(doorToSpawn2);
+        registerActor(new Orb(this, new DiscreteCoordinates(17, 12), OrbType.FIRE));
+        registerActor(new Orb(this, new DiscreteCoordinates(17, 6), OrbType.WATER));
+        registerActor(new Heart(this, Orientation.UP, new DiscreteCoordinates(8, 4)));
+        registerActor(new Heart(this, Orientation.UP, new DiscreteCoordinates(10, 6)));
+        registerActor(new Heart(this, Orientation.UP, new DiscreteCoordinates(5, 13)));
+        registerActor(new Heart(this, Orientation.UP, new DiscreteCoordinates(10, 11)));
+
+        PressurePlate plate1 = new PressurePlate(this, new DiscreteCoordinates(5, 7)); // Plaque pour le grand mur de feu (en haut)
+        PressurePlate plate2 = new PressurePlate(this, new DiscreteCoordinates(5, 10)); // Plaque pour le grand mur d'eau (en bas)
+        registerActor(plate1);
+        registerActor(plate2);
+        Logic invertedPlate1 = new Logic() {
+            @Override
+            public boolean isOn() {
+                return plate1.isOff();
+            }
+            @Override
+            public boolean isOff() {
+                return plate1.isOn();
+            }
+            @Override
+            public float getIntensity() {
+                return plate1.isOff() ? 1f : 0f;
+            }
+        };
+        Logic invertedPlate2 = new Logic() {
+            @Override
+            public boolean isOn() {
+                return plate2.isOff();
+            }
+            @Override
+            public boolean isOff() {
+                return plate2.isOn();
+            }
+            @Override
+            public float getIntensity() {
+                return plate2.isOff() ? 1f : 0f;
+            }
+        };
+        for (int i = 0; i <= 4; i++) {
+            registerActor(new FireWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 10 + i), invertedPlate1));
+        }
+        for (int i = 0; i <= 4; i++) {
+            registerActor(new WaterWall(this, Orientation.LEFT, new DiscreteCoordinates(12, 3 + i), invertedPlate2));
+        }
     }
 
     @Override

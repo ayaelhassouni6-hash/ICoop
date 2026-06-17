@@ -14,4 +14,6 @@ public interface ICoopInteractionVisitor extends AreaInteractionVisitor {
     default void interactWith(ElementalItem item, boolean isCellInteraction) {}
     default void interactWith(Orb orb, boolean isCellInteraction) {}
     default void interactWith(ElementalWall wall, boolean isCellInteraction) {}
+    default void interactWith(Heart heart, boolean isCellInteraction) {}
+    default void interactWith(PressurePlate plate, boolean isCellInteraction) {}
 }
