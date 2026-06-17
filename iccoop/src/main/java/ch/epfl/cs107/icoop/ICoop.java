@@ -14,6 +14,7 @@ import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 import ch.epfl.cs107.icoop.area.Spawn;
 import ch.epfl.cs107.icoop.area.OrbWay;
+import ch.epfl.cs107.icoop.area.Maze;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import static ch.epfl.cs107.icoop.area.ICoopArea.DEFAULT_SCALE_FACTOR;
 import static java.lang.Math.max;
 
 public class ICoop extends AreaGame implements DialogHandler {
-    private final String[] areas = {"Spawn", "OrbWay"};
+    private final String[] areas = {"Spawn", "OrbWay", "Maze"};
     private ICoopPlayer player;
     private ICoopPlayer player2;
     private int areaIndex;
@@ -46,6 +47,7 @@ public class ICoop extends AreaGame implements DialogHandler {
         if (super.begin(window, fileSystem)) {
             addArea(new Spawn(this));
             addArea(new OrbWay());
+            addArea(new Maze());
             initArea(areas[areaIndex]);
             centerOfMass = new CenterOfMass(player,player2);
             ICoopArea area = (ICoopArea) getCurrentArea();
@@ -104,6 +106,8 @@ public class ICoop extends AreaGame implements DialogHandler {
             addArea(newSpawn);
         } else if (currentAreaTitle.equals("OrbWay")) {
             addArea(new OrbWay());
+        } else if (currentAreaTitle.equals("Maze")) {
+            addArea(new Maze());
         }
 
         ICoopArea currentArea = (ICoopArea) setCurrentArea(currentAreaTitle, true);

@@ -39,7 +39,9 @@ public final class ICoopBehavior extends AreaBehavior {
         DARK2(-16514044,   false,   false),
         DARK_GRAY(-15790321,   false,   false),
         LIGHT_WALKABLE(-263173,     true,    true),
-        DOOR2(-14112955,   false,   true)
+        DOOR2(-14112955,   false,   true),
+        MAZE_COLOR_1(-13916088, false, false),
+        MAZE_COLOR_2(-196868, true, true)
         ;
 
         final int type;
@@ -94,6 +96,12 @@ public final class ICoopBehavior extends AreaBehavior {
                 return false;
             }
             for (Interactable other : entities) {
+                if (other instanceof ch.epfl.cs107.icoop.actor.ElementalWall) {
+                    ch.epfl.cs107.icoop.actor.ElementalWall wall = (ch.epfl.cs107.icoop.actor.ElementalWall) other;
+                    if (!wall.isActive()) {
+                        continue;
+                    }
+                }
                 if (entity instanceof ElementalEntity && other instanceof ElementalEntity) {
                     ElementalEntity enteringEntity = (ElementalEntity) entity;
                     ElementalEntity presentEntity = (ElementalEntity) other;
@@ -122,4 +130,3 @@ public final class ICoopBehavior extends AreaBehavior {
 
     }
 }
-

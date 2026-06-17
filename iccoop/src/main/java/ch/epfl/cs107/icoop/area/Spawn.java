@@ -55,6 +55,21 @@ public final class Spawn extends ICoopArea {
         registerActor(bomb3);
         registerActor(rock);
         registerActor(spawnToOrbWay);
+        // Configuration de la porte vers le labyrinthe (Maze)
+        List<DiscreteCoordinates> arrivalInMaze = Arrays.asList(
+                new DiscreteCoordinates(2, 39), // Position du joueur Rouge
+                new DiscreteCoordinates(3, 39)  // Position du joueur Bleu
+        );
+
+        DiscreteCoordinates mazeDoorMainCell = new DiscreteCoordinates(4, 0);
+        DiscreteCoordinates[] mazeDoorOtherCells = {
+                new DiscreteCoordinates(5, 0)
+        };
+
+        Door spawnToMaze = new Door("Maze", Logic.TRUE, arrivalInMaze,
+                this, mazeDoorMainCell, Orientation.UP, mazeDoorOtherCells);
+
+        registerActor(spawnToMaze);
     }
     public String getTitle() {
         return "Spawn";
