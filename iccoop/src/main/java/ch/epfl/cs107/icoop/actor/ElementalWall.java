@@ -41,7 +41,6 @@ public abstract class ElementalWall extends AreaEntity implements ElementalEntit
     }
 
     public void destroy() {
-        this.isDestroyed = true;
         getOwnerArea().unregisterActor(this);
     }
 
@@ -65,7 +64,7 @@ public abstract class ElementalWall extends AreaEntity implements ElementalEntit
 
     @Override
     public boolean isViewInteractable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -81,12 +80,12 @@ public abstract class ElementalWall extends AreaEntity implements ElementalEntit
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        return null; // Pas d'interaction à distance
+        return null;
     }
 
     @Override
     public boolean wantsCellInteraction() {
-        return isActive(); // Il attaque seulement s'il est allumé !
+        return isActive();
     }
 
     @Override

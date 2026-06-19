@@ -37,6 +37,8 @@ public class Explosif extends ICoopCollectable implements Interactor {
     public void activate() {
         if (!isActivated && !hasExploded) {
             isActivated = true;
+            this.animation = new Animation("icoop/explosive", 2, 1, 1, this, 16, 16,
+                    ANIMATION_DURATION / 6, true);
         }
     }
 
@@ -53,9 +55,9 @@ public class Explosif extends ICoopCollectable implements Interactor {
         if (isActivated && !hasExploded) {
             retardateur--;
             if (retardateur <= 0) {
-                hasExploded = true;
                 this.animation = new Animation("icoop/explosion", 7, 1, 1, this , 32 , 32 ,
-                        ANIMATION_DURATION /7 , false);
+                        ANIMATION_DURATION/7 , false);
+                hasExploded = true;
             }
         }
         animation.update(deltaTime);
@@ -115,6 +117,12 @@ public class Explosif extends ICoopCollectable implements Interactor {
         }
         if (other instanceof ICoopPlayer) {
             ((ICoopPlayer) other).takeDamage(DamageType.PHYSICAL, 2);
+        }
+        if (other instanceof ElementalWall) {
+            ((ElementalWall) other).destroy();
+        }
+        if (other instanceof Explosif && other != this) {
+            ((Explosif) other).activate();
         }
     }
 

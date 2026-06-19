@@ -40,8 +40,9 @@ public final class ICoopBehavior extends AreaBehavior {
         DARK_GRAY(-15790321,   false,   false),
         LIGHT_WALKABLE(-263173,     true,    true),
         DOOR2(-14112955,   false,   true),
-        MAZE_COLOR_1(-13916088, false, false),
-        MAZE_COLOR_2(-196868, true, true)
+        MAZE_COLOR_1(-13916088, true, true),
+        MAZE_COLOR_2(-196868, true, true),
+        MAZE_COLOR_3(-1111111, true, true)
         ;
 
         final int type;
