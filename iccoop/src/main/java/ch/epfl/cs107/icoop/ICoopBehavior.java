@@ -94,9 +94,16 @@ public final class ICoopBehavior extends AreaBehavior {
         @Override
         public boolean canEnter(Interactable entity) {
             if (!type.canWalk) {
-                return false;
+                if (!(entity instanceof ch.epfl.cs107.icoop.actor.Unstoppable && type.canFly)) {
+                    return false;
+                }
             }
+
             for (Interactable other : entities) {
+                if (entity instanceof ch.epfl.cs107.icoop.actor.Unstoppable) {
+                    continue;
+                }
+
                 if (other instanceof ch.epfl.cs107.icoop.actor.ElementalWall) {
                     ch.epfl.cs107.icoop.actor.ElementalWall wall = (ch.epfl.cs107.icoop.actor.ElementalWall) other;
                     if (!wall.isActive()) {

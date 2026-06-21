@@ -56,6 +56,17 @@ public final class Maze extends ICoopArea {
         registerActor(new WaterWall(this, Orientation.DOWN, new DiscreteCoordinates(8, 4), Logic.TRUE));
 
         registerActor(new FireWall(this, Orientation.DOWN, new DiscreteCoordinates(13, 4), Logic.TRUE));
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(12, 33)));
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(12, 31)));
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(12, 29)));
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(12, 27)));
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(12, 25)));
+
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(10, 33)));
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(10, 32)));
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(10, 30)));
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(10, 28)));
+        registerActor(new HellSkull(this, Orientation.RIGHT, new DiscreteCoordinates(10, 26)));
     }
 
     @Override
